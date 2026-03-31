@@ -168,9 +168,9 @@
     .mcard .mv { font-size: 20px; font-weight: 600; color: #ffffff; }
     .mcard .mv.pos { color: #6DEDB8; }
 
-    .tier-inputs { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 10px; }
-    .ti { display: flex; flex-direction: column; gap: 3px; justify-content: space-between; }
-    .ti label { font-size: 11px; color: var(--color-text-secondary); line-height: 1.4; }
+    .tier-inputs { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 10px; align-items: end; }
+    .ti { display: flex; flex-direction: column; gap: 3px; }
+    .ti label { font-size: 11px; color: var(--color-text-secondary); line-height: 1.4; min-height: 30px; }
 
     .tier-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 10px; }
     .tier-card {
@@ -297,7 +297,7 @@
       <p class="sec-label">Package Parameters</p>
       <div class="row">
         <label>Salary Raise %</label>
-        <div class="input-wrap">
+        <div class="input-wrap" style="max-width: 100px;">
           <input type="text" id="raiseInput" value="5" oninput="update()" placeholder="5" class="no-prefix has-suffix">
           <span class="suffix">%</span>
         </div>
