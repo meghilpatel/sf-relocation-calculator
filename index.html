@@ -59,21 +59,9 @@
       padding: 2rem 1rem;
     }
 
-    .page-wrap {
-      max-width: 780px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      font-size: 20px;
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-    .subtitle {
-      font-size: 13px;
-      color: var(--color-text-secondary);
-      margin-bottom: 24px;
-    }
+    .page-wrap { max-width: 780px; margin: 0 auto; }
+    h1 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 24px; }
 
     .card {
       background: var(--color-bg);
@@ -91,6 +79,16 @@
       margin-bottom: 10px;
     }
 
+    .sec-desc {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 0.5px solid var(--color-border);
+    }
+    .sec-desc strong { font-weight: 500; color: var(--color-text-primary); }
+
     .row {
       display: flex;
       align-items: center;
@@ -98,173 +96,102 @@
       margin-bottom: 12px;
     }
     .row:last-child { margin-bottom: 0; }
-    .row label {
-      font-size: 13px;
-      color: var(--color-text-secondary);
-      min-width: 148px;
-    }
-    .row .val {
-      font-size: 13px;
-      font-weight: 500;
-      min-width: 72px;
-      text-align: right;
-    }
+    .row label { font-size: 13px; color: var(--color-text-secondary); min-width: 148px; }
 
-    input[type=range] {
-      flex: 1;
-      accent-color: #185FA5;
-      cursor: pointer;
+    .input-wrap { position: relative; flex: 1; }
+    .input-wrap .prefix {
+      position: absolute; left: 9px; top: 50%; transform: translateY(-50%);
+      font-size: 13px; color: var(--color-text-secondary); pointer-events: none;
     }
+    .input-wrap .suffix {
+      position: absolute; right: 9px; top: 50%; transform: translateY(-50%);
+      font-size: 13px; color: var(--color-text-secondary); pointer-events: none;
+    }
+    .input-wrap input {
+      width: 100%; padding: 7px 9px 7px 22px;
+      font-size: 13px; border: 0.5px solid var(--color-border-secondary);
+      border-radius: var(--radius-md); background: var(--color-bg);
+      color: var(--color-text-primary); outline: none; font-family: inherit;
+    }
+    .input-wrap input.no-prefix { padding-left: 9px; }
+    .input-wrap input.has-suffix { padding-right: 26px; }
+    .input-wrap input:focus { box-shadow: 0 0 0 2px rgba(24,95,165,0.25); border-color: #185FA5; }
 
-    input[type=number] {
-      width: 100%;
-      padding: 6px 8px;
-      font-size: 13px;
-      border: 0.5px solid var(--color-border-secondary);
-      border-radius: var(--radius-md);
-      background: var(--color-bg);
-      color: var(--color-text-primary);
-      outline: none;
-    }
-    input[type=number]:focus {
-      box-shadow: 0 0 0 2px rgba(24,95,165,0.25);
-    }
+    .split-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .split-row label { font-size: 13px; color: var(--color-text-secondary); min-width: 148px; }
+    .split-row input[type=range] { flex: 1; accent-color: #185FA5; cursor: pointer; }
+    .split-row .val { font-size: 13px; font-weight: 500; min-width: 52px; text-align: right; }
 
     select {
-      flex: 1;
-      font-size: 13px;
-      padding: 6px 8px;
+      flex: 1; font-size: 13px; padding: 7px 9px;
       border: 0.5px solid var(--color-border-secondary);
-      border-radius: var(--radius-md);
-      background: var(--color-bg);
-      color: var(--color-text-primary);
-      outline: none;
-      cursor: pointer;
+      border-radius: var(--radius-md); background: var(--color-bg);
+      color: var(--color-text-primary); outline: none; cursor: pointer; font-family: inherit;
     }
 
-    .tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 14px;
-    }
+    .tabs { display: flex; gap: 6px; margin-bottom: 14px; }
     .tab {
-      padding: 5px 14px;
-      border-radius: var(--radius-md);
+      padding: 5px 14px; border-radius: var(--radius-md);
       border: 0.5px solid var(--color-border-secondary);
-      font-size: 13px;
-      cursor: pointer;
-      background: transparent;
-      color: var(--color-text-secondary);
-      font-family: inherit;
+      font-size: 13px; cursor: pointer; background: transparent;
+      color: var(--color-text-secondary); font-family: inherit;
       transition: background 0.12s, color 0.12s;
     }
     .tab.active {
-      background: var(--color-bg-info);
-      color: var(--color-text-info);
-      border-color: transparent;
-      font-weight: 500;
+      background: var(--color-bg-info); color: var(--color-text-info);
+      border-color: transparent; font-weight: 500;
     }
 
-    .mgrid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .mcard {
-      background: var(--color-bg-secondary);
-      border-radius: var(--radius-md);
-      padding: 12px;
-    }
+    .mgrid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: 12px; }
+    .mcard { background: var(--color-bg-secondary); border-radius: var(--radius-md); padding: 12px; }
     .mcard .ml { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; }
     .mcard .mv { font-size: 18px; font-weight: 500; }
     .mv.pos { color: var(--green-val); }
 
-    .tier-inputs {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin-bottom: 10px;
-    }
+    .tier-inputs { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 10px; }
     .ti { display: flex; flex-direction: column; gap: 3px; }
     .ti label { font-size: 11px; color: var(--color-text-secondary); line-height: 1.4; }
 
-    .tier-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin-bottom: 10px;
-    }
+    .tier-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 10px; }
     .tier-card {
-      border-radius: var(--radius-md);
-      padding: 10px 12px;
-      border: 0.5px solid var(--color-border);
-      background: var(--color-bg-secondary);
+      border-radius: var(--radius-md); padding: 10px 12px;
+      border: 0.5px solid var(--color-border); background: var(--color-bg-secondary);
     }
     .tier-name { font-size: 12px; font-weight: 500; margin-bottom: 2px; }
     .tier-range { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 6px; }
     .tier-bonus { font-size: 15px; font-weight: 500; }
 
-    .city-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-    }
-    .ccity {
-      background: var(--color-bg-secondary);
-      border-radius: var(--radius-md);
-      padding: 10px 12px;
-    }
+    .city-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+    .ccity { background: var(--color-bg-secondary); border-radius: var(--radius-md); padding: 10px 12px; }
     .cn { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
     .cs { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 5px; }
     .cd { font-size: 12px; margin-bottom: 4px; }
     .cd.pos { color: var(--green-val); }
     .cd.neg { color: var(--red-val); }
 
-    .pill {
-      display: inline-block;
-      font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 20px;
-    }
+    .pill { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 20px; }
     .pg { background: var(--green-bg); color: var(--green-text); }
     .pa { background: var(--amber-bg); color: var(--amber-text); }
     .pr { background: var(--red-bg); color: var(--red-text); }
 
     .verdict {
-      border-radius: var(--radius-md);
-      padding: 10px 12px;
-      margin-top: 10px;
-      font-size: 12px;
-      line-height: 1.6;
-      color: var(--color-text-secondary);
+      border-radius: var(--radius-md); padding: 10px 12px; margin-top: 10px;
+      font-size: 12px; line-height: 1.6; color: var(--color-text-secondary);
     }
 
     .ote-note {
-      font-size: 11px;
-      color: var(--color-text-secondary);
-      background: var(--color-bg-secondary);
-      border-radius: var(--radius-md);
-      padding: 8px 10px;
-      margin-top: 8px;
+      font-size: 11px; color: var(--color-text-secondary);
+      background: var(--color-bg-secondary); border-radius: var(--radius-md);
+      padding: 8px 10px; margin-top: 8px;
     }
 
-    hr.div {
-      border: none;
-      border-top: 0.5px solid var(--color-border);
-      margin: 12px 0;
-    }
-
-    .hint {
-      font-size: 11px;
-      color: var(--color-text-secondary);
-      margin-top: 4px;
-    }
+    hr.div { border: none; border-top: 0.5px solid var(--color-border); margin: 12px 0; }
+    .hint { font-size: 11px; color: var(--color-text-secondary); margin-top: 4px; }
   </style>
 </head>
 <body>
   <div class="page-wrap">
-    <h1>SF Relocation Package Calculator</h1>
+    <h1>SF relocation package calculator</h1>
     <p class="subtitle">Model raise % and tiered bonuses against cost-of-living by origin city. Supports base salary and OTE/sales employees.</p>
 
     <div class="card">
@@ -277,18 +204,22 @@
       <div id="base-inputs">
         <div class="row">
           <label>Current base salary</label>
-          <input type="range" min="60000" max="400000" step="5000" value="150000" id="salarySlider" oninput="update()">
-          <span class="val" id="salaryVal">$150K</span>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="text" id="salaryInput" value="150,000" oninput="formatAndUpdate('salaryInput')" placeholder="150,000">
+          </div>
         </div>
       </div>
 
       <div id="ote-inputs" style="display:none;">
         <div class="row">
           <label>Current OTE</label>
-          <input type="range" min="80000" max="500000" step="5000" value="200000" id="oteSlider" oninput="update()">
-          <span class="val" id="oteVal">$200K</span>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="text" id="oteInput" value="200,000" oninput="formatAndUpdate('oteInput')" placeholder="200,000">
+          </div>
         </div>
-        <div class="row">
+        <div class="split-row">
           <label>Base / variable split</label>
           <input type="range" min="40" max="80" step="5" value="60" id="splitSlider" oninput="update()">
           <span class="val" id="splitVal">60/40</span>
@@ -310,8 +241,10 @@
       <p class="sec-label">Package parameters</p>
       <div class="row">
         <label>Salary raise %</label>
-        <input type="range" min="0" max="25" step="1" value="5" id="raiseSlider" oninput="update()">
-        <span class="val" id="raiseVal">5%</span>
+        <div class="input-wrap">
+          <input type="text" id="raiseInput" value="5" oninput="update()" placeholder="5" class="no-prefix has-suffix">
+          <span class="suffix">%</span>
+        </div>
       </div>
 
       <hr class="div">
@@ -319,15 +252,24 @@
       <div class="tier-inputs">
         <div class="ti">
           <label>Tier 1 — low COL gap (&lt;10% diff) · NY, Boston, LA</label>
-          <input type="number" id="t1" value="10000" min="0" step="500" oninput="update()">
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="text" id="t1" value="10,000" oninput="formatAndUpdate('t1')" placeholder="10,000">
+          </div>
         </div>
         <div class="ti">
           <label>Tier 2 — mid COL gap (10–25%) · Seattle, Austin, Denver</label>
-          <input type="number" id="t2" value="7500" min="0" step="500" oninput="update()">
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="text" id="t2" value="7,500" oninput="formatAndUpdate('t2')" placeholder="7,500">
+          </div>
         </div>
         <div class="ti">
           <label>Tier 3 — high COL gap (&gt;25%) · Chicago, Atlanta, Phoenix</label>
-          <input type="number" id="t3" value="5000" min="0" step="500" oninput="update()">
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="text" id="t3" value="5,000" oninput="formatAndUpdate('t3')" placeholder="5,000">
+          </div>
         </div>
       </div>
       <div class="tier-grid" id="tierCards"></div>
@@ -338,6 +280,7 @@
 
     <div class="card">
       <p class="sec-label">By origin city — net impact after COL adjustment</p>
+      <p class="sec-desc">Each card shows whether the raise covers the higher cost of living in SF relative to where the employee is coming from. <strong>Raise vs COL</strong> is the annual raise amount minus the estimated extra yearly spend in SF — green means the raise covers it, red means there's still a gap. <strong>Yr-1 incl. bonus</strong> adds the one-time relocation bonus on top, showing the full first-year financial picture. The badge summarizes the overall strength of the package for that origin city.</p>
       <div class="city-grid" id="cityGrid"></div>
       <div id="verdict"></div>
     </div>
@@ -359,6 +302,25 @@
 
     let empType = 'base';
 
+    function parseVal(id) {
+      return parseFloat(document.getElementById(id).value.replace(/[^0-9.]/g, '')) || 0;
+    }
+
+    function formatAndUpdate(id) {
+      const el = document.getElementById(id);
+      const pos = el.selectionStart;
+      const oldLen = el.value.length;
+      const raw = el.value.replace(/[^0-9]/g, '');
+      const num = parseInt(raw);
+      if (!isNaN(num) && raw !== '') {
+        el.value = num.toLocaleString('en-US');
+        const newLen = el.value.length;
+        const newPos = Math.max(0, pos + (newLen - oldLen));
+        el.setSelectionRange(newPos, newPos);
+      }
+      update();
+    }
+
     function setType(t) {
       empType = t;
       document.getElementById('tab-base').classList.toggle('active', t === 'base');
@@ -372,28 +334,24 @@
     function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
 
     function update() {
-      const raise = parseInt(document.getElementById('raiseSlider').value);
-      const t1b = parseInt(document.getElementById('t1').value) || 0;
-      const t2b = parseInt(document.getElementById('t2').value) || 0;
-      const t3b = parseInt(document.getElementById('t3').value) || 0;
+      const raise = parseVal('raiseInput');
+      const t1b = parseVal('t1');
+      const t2b = parseVal('t2');
+      const t3b = parseVal('t3');
       const tierBonus = [0, t1b, t2b, t3b];
-
-      document.getElementById('raiseVal').textContent = raise + '%';
 
       let baseSalary, variablePay, currentTotal;
 
       if (empType === 'base') {
-        baseSalary = parseInt(document.getElementById('salarySlider').value);
+        baseSalary = parseVal('salaryInput');
         variablePay = 0;
         currentTotal = baseSalary;
-        document.getElementById('salaryVal').textContent = '$' + (baseSalary / 1000).toFixed(0) + 'K';
       } else {
-        const ote = parseInt(document.getElementById('oteSlider').value);
+        const ote = parseVal('oteInput');
         const splitPct = parseInt(document.getElementById('splitSlider').value);
         baseSalary = Math.round(ote * splitPct / 100);
         variablePay = ote - baseSalary;
         currentTotal = ote;
-        document.getElementById('oteVal').textContent = '$' + (ote / 1000).toFixed(0) + 'K';
         document.getElementById('splitVal').textContent = splitPct + '/' + (100 - splitPct);
         document.getElementById('oteBreakdown').textContent =
           'Base: ' + fmt(baseSalary) + '  |  Variable (target): ' + fmt(variablePay) + '  |  OTE: ' + fmt(ote);
