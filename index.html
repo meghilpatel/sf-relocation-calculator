@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SF Relocation Package Calculator</title>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -117,10 +118,6 @@
     .input-wrap input.has-suffix { padding-right: 26px; }
     .input-wrap input:focus { box-shadow: 0 0 0 2px rgba(24,95,165,0.25); border-color: #185FA5; }
 
-    .split-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-    .split-row label { font-size: 13px; color: var(--color-text-secondary); min-width: 148px; }
-    .split-row input[type=range] { flex: 1; accent-color: #185FA5; cursor: pointer; }
-    .split-row .val { font-size: 13px; font-weight: 500; min-width: 52px; text-align: right; }
 
     select {
       flex: 1; font-size: 13px; padding: 7px 9px;
@@ -219,10 +216,14 @@
             <input type="text" id="oteInput" value="200,000" oninput="formatAndUpdate('oteInput')" placeholder="200,000">
           </div>
         </div>
-        <div class="split-row">
-          <label>Base / variable split</label>
-          <input type="range" min="40" max="80" step="5" value="60" id="splitSlider" oninput="update()">
-          <span class="val" id="splitVal">60/40</span>
+        <div class="row">
+          <label>Pay mix (base / variable)</label>
+          <select id="splitSelect" onchange="update()">
+            <option value="80">80/20</option>
+            <option value="75">75/25</option>
+            <option value="70" selected>70/30</option>
+            <option value="50">50/50</option>
+          </select>
         </div>
         <div class="ote-note" id="oteBreakdown">—</div>
       </div>
@@ -348,11 +349,10 @@
         currentTotal = baseSalary;
       } else {
         const ote = parseVal('oteInput');
-        const splitPct = parseInt(document.getElementById('splitSlider').value);
+        const splitPct = parseInt(document.getElementById('splitSelect').value);
         baseSalary = Math.round(ote * splitPct / 100);
         variablePay = ote - baseSalary;
         currentTotal = ote;
-        document.getElementById('splitVal').textContent = splitPct + '/' + (100 - splitPct);
         document.getElementById('oteBreakdown').textContent =
           'Base: ' + fmt(baseSalary) + '  |  Variable (target): ' + fmt(variablePay) + '  |  OTE: ' + fmt(ote);
       }
