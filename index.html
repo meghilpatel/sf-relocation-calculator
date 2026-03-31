@@ -252,7 +252,7 @@
       <div class="row" id="raiseTargetRow" style="display:none; margin-bottom:0;">
         <label>Raise Applies To</label>
         <select id="raiseTarget" onchange="update()">
-          <option value="base">Base salary only</option>
+          <option value="base">Base Salary Only</option>
           <option value="ote">Full OTE</option>
         </select>
       </div>
@@ -303,6 +303,26 @@
       <p class="sec-label">By Origin City — Net Impact After COL Adjustment</p>
       <p class="sec-desc">Each card shows whether the raise covers the higher cost of living in SF relative to where the employee is coming from. <strong>Raise vs COL</strong> is the annual raise amount minus the estimated extra yearly spend in SF — green means the raise covers it, red means there's still a gap. <strong>Yr-1 incl. bonus</strong> adds the one-time relocation bonus on top, showing the full first-year financial picture. The badge summarizes the overall strength of the package for that origin city.</p>
       <div class="city-grid" id="cityGrid"></div>
+
+      <div style="margin-top: 10px; padding: 12px; background: var(--color-bg); border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md);">
+        <p style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 8px;">
+          Employee not in a listed city? Look up their COL % difference vs SF on
+          <a href="https://www.nerdwallet.com/cost-of-living-calculator/compare/san-francisco-ca-vs-new-york-manhattan-ny" target="_blank" rel="noopener" style="color: var(--color-text-info); text-decoration: none;">NerdWallet's COL calculator</a>
+          and enter it below.
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center;">
+          <input type="text" id="customCityName" placeholder="City name (e.g. Scotch Plains, NJ)" oninput="updateCustom()"
+            style="padding: 7px 9px; font-size: 13px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); background: var(--color-bg); color: var(--color-text-primary); font-family: inherit; outline: none;">
+          <div style="position: relative;">
+            <input type="text" id="customColPct" placeholder="COL % cheaper than SF (e.g. 25)" oninput="updateCustom()"
+              style="width: 100%; padding: 7px 30px 7px 9px; font-size: 13px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); background: var(--color-bg); color: var(--color-text-primary); font-family: inherit; outline: none;">
+            <span style="position: absolute; right: 9px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--color-text-secondary); pointer-events: none;">%</span>
+          </div>
+          <button onclick="clearCustom()" style="padding: 7px 12px; font-size: 12px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); background: transparent; color: var(--color-text-secondary); cursor: pointer; font-family: inherit; white-space: nowrap;">Clear</button>
+        </div>
+        <div id="customResult" style="margin-top: 8px; display: none;"></div>
+      </div>
+
       <div id="verdict"></div>
     </div>
 
@@ -471,6 +491,70 @@
       }
 
       document.getElementById('verdict').innerHTML = `<div class="verdict" style="background:${vbg};">${vtxt}</div>`;
+      updateCustom();
+    }
+
+    function updateCustom() {
+      const nameEl = document.getElementById('customCityName');
+      const pctEl = document.getElementById('customColPct');
+      const resultEl = document.getElementById('customResult');
+      const name = nameEl.value.trim();
+      const colPct = parseFloat(pctEl.value.replace(/[^0-9.-]/g, ''));
+
+      if (!name || isNaN(colPct)) {
+        resultEl.style.display = 'none';
+        return;
+      }
+
+      const raise = parseVal('raiseInput');
+      const t1b = parseVal('t1'), t2b = parseVal('t2'), t3b = parseVal('t3');
+
+      let baseSalary, currentTotal, bonusTarget = 0;
+      if (empType === 'base') {
+        baseSalary = parseVal('salaryInput');
+        const bonusOn = document.getElementById('bonusToggle').checked;
+        if (bonusOn) {
+          const bonusPct = parseInt(document.getElementById('bonusLevelSelect').value);
+          bonusTarget = Math.round(baseSalary * bonusPct / 100);
+          currentTotal = baseSalary + bonusTarget;
+        } else {
+          currentTotal = baseSalary;
+        }
+      } else {
+        const ote = parseVal('oteInput');
+        const splitPct = parseInt(document.getElementById('splitSelect').value);
+        baseSalary = Math.round(ote * splitPct / 100);
+        currentTotal = ote;
+      }
+
+      const raiseAmount = baseSalary * (raise / 100);
+
+      const tier = colPct < 10 ? 1 : colPct <= 25 ? 2 : 3;
+      const tierBonus = [0, t1b, t2b, t3b];
+      const bonus = tierBonus[tier];
+      const colExtra = currentTotal * (colPct / 100);
+      const net = raiseAmount - colExtra;
+      const year1net = net + bonus;
+
+      let pillClass = 'pa', pillText = 'Partial COL Cover';
+      if (net >= 0) { pillClass = 'pg'; pillText = 'Raise Covers Gap'; }
+      if (net < -raiseAmount * 0.5) { pillClass = 'pr'; pillText = 'Raise Falls Short'; }
+
+      resultEl.style.display = '';
+      resultEl.innerHTML = `
+        <div class="ccity" style="background: var(--color-bg-secondary); border-radius: var(--radius-md); padding: 10px 12px;">
+          <div class="cn">${name}</div>
+          <div class="cs">SF costs ~${colPct}% more · Relo Bonus: ${fmt(bonus)} (Tier ${tier})</div>
+          <div class="cd ${net >= 0 ? 'pos' : 'neg'}">Raise vs COL: ${net >= 0 ? '+' : ''}${fmt(net)}/yr</div>
+          <div class="cd pos" style="margin-bottom:4px;">Yr-1 Incl. Relo Bonus: +${fmt(Math.max(year1net, 0))}</div>
+          <span class="pill ${pillClass}">${pillText}</span>
+        </div>`;
+    }
+
+    function clearCustom() {
+      document.getElementById('customCityName').value = '';
+      document.getElementById('customColPct').value = '';
+      document.getElementById('customResult').style.display = 'none';
     }
 
     update();
