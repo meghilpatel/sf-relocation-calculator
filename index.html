@@ -169,7 +169,7 @@
     .mcard .mv.pos { color: #6DEDB8; }
 
     .tier-inputs { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 10px; }
-    .ti { display: flex; flex-direction: column; gap: 3px; }
+    .ti { display: flex; flex-direction: column; gap: 3px; justify-content: space-between; }
     .ti label { font-size: 11px; color: var(--color-text-secondary); line-height: 1.4; }
 
     .tier-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 10px; }
@@ -307,21 +307,21 @@
       <p class="sec-label">Tiered Relocation Bonus — By COL Gap From Origin City</p>
       <div class="tier-inputs">
         <div class="ti">
-          <label>Tier 1 — High COL gap (&gt;25% diff) · Chicago, Atlanta, Phoenix</label>
+          <label>High COL Gap (&gt;25% diff) · Chicago, Atlanta, Phoenix</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
             <input type="text" id="t1" value="10,000" oninput="formatAndUpdate('t1')" placeholder="10,000">
           </div>
         </div>
         <div class="ti">
-          <label>Tier 2 — Mid COL gap (10–25%) · Seattle, Austin, Denver</label>
+          <label>Mid COL Gap (10–25%) · Seattle, Austin, Denver</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
             <input type="text" id="t2" value="7,500" oninput="formatAndUpdate('t2')" placeholder="7,500">
           </div>
         </div>
         <div class="ti">
-          <label>Tier 3 — Low COL gap (&lt;10% diff) · NY, Boston, LA</label>
+          <label>Low COL Gap (&lt;10% diff) · NY, Boston, LA</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
             <input type="text" id="t3" value="5,000" oninput="formatAndUpdate('t3')" placeholder="5,000">
@@ -329,7 +329,7 @@
         </div>
       </div>
       <div class="tier-grid" id="tierCards"></div>
-      <p class="hint">Tier 1 gets the highest bonus — employees from cheaper cities face the biggest COL jump moving to SF. Employees from already-expensive metros get less since the gap is smaller.</p>
+      <p class="hint">The High COL Gap group gets the highest bonus — employees from cheaper cities face the biggest jump moving to SF. Employees from already-expensive metros get less since the gap is smaller.</p>
     </div>
 
     <div class="mgrid" id="summaryCards"></div>
@@ -482,9 +482,10 @@
       `;
 
       const tierRanges = ['', 'Chicago · Atlanta · Phoenix', 'Seattle · Austin · Miami · Denver', 'NY · Boston · LA'];
+      const tierNames = ['', 'High COL Gap', 'Mid COL Gap', 'Low COL Gap'];
       document.getElementById('tierCards').innerHTML = [1, 2, 3].map(i => `
         <div class="tier-card">
-          <div class="tier-name">Tier ${i}</div>
+          <div class="tier-name">${tierNames[i]}</div>
           <div class="tier-range">${tierRanges[i]}</div>
           <div class="tier-bonus">${fmt(tierBonus[i])}</div>
         </div>
@@ -519,10 +520,10 @@
         vtxt = `Raise alone covers the COL gap for <strong>${covered}/10</strong> cities. The tiered bonus provides extra cushion in year 1 — strongest for high-gap cities where the raise goes furthest.`;
       } else if (covered >= 4) {
         vbg = 'var(--amber-bg)';
-        vtxt = `Raise covers the gap for <strong>${covered}/10</strong> cities. Employees from expensive metros (NY, Boston, LA) rely heavily on the year-1 bonus — consider whether Tier 1 is large enough to make relocation worthwhile for them.`;
+        vtxt = `Raise covers the gap for <strong>${covered}/10</strong> cities. Employees from expensive metros (NY, Boston, LA) rely heavily on the year-1 bonus — consider whether the Low COL Gap bonus is large enough to make relocation worthwhile for them.`;
       } else {
         vbg = 'var(--red-bg)';
-        vtxt = `Raise only covers the gap for <strong>${covered}/10</strong> cities. Most employees take a real-terms pay cut. Increase the raise % or Tier 1–2 bonuses.`;
+        vtxt = `Raise only covers the gap for <strong>${covered}/10</strong> cities. Most employees take a real-terms pay cut. Increase the raise % or the High/Mid COL Gap bonuses.`;
       }
 
       document.getElementById('verdict').innerHTML = `<div class="verdict" style="background:${vbg};">${vtxt}</div>`;
