@@ -189,22 +189,42 @@
 <body>
   <div class="page-wrap">
     <h1>SF Relocation Package Calculator</h1>
-    <p class="subtitle">Model raise % and tiered bonuses against cost-of-living by origin city. Supports base salary and OTE/sales employees.</p>
+    <p class="subtitle">Model raise % and tiered bonuses against cost-of-living by origin city. Supports base salary and Sales / OTE employees.</p>
 
     <div class="card">
-      <p class="sec-label">Employee type</p>
+      <p class="sec-label">Employee Type</p>
       <div class="tabs">
-        <button class="tab active" onclick="setType('base')" id="tab-base">Base salary</button>
+        <button class="tab active" onclick="setType('base')" id="tab-base">Base Salary</button>
         <button class="tab" onclick="setType('ote')" id="tab-ote">Sales / OTE</button>
       </div>
 
       <div id="base-inputs">
         <div class="row">
-          <label>Current base salary</label>
+          <label>Current Base Salary</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
             <input type="text" id="salaryInput" value="150,000" oninput="formatAndUpdate('salaryInput')" placeholder="150,000">
           </div>
+        </div>
+        <div class="row">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+            <input type="checkbox" id="bonusToggle" onchange="toggleBonus()" style="width:14px;height:14px;cursor:pointer;accent-color:#185FA5;">
+            Corporate Bonus Program
+          </label>
+        </div>
+        <div id="bonus-fields" style="display:none;">
+          <div class="row" style="margin-top:4px;">
+            <label>Job Level</label>
+            <select id="bonusLevelSelect" onchange="update()">
+              <option value="30">E7, P8 — 30%</option>
+              <option value="25">P6–P7, M5–M6 — 25%</option>
+              <option value="20">P5, M4 — 20%</option>
+              <option value="15" selected>P4, M3 — 15%</option>
+              <option value="10">S3–S4, P1–P3, M2 — 10%</option>
+              <option value="5">S1–S2 — 5%</option>
+            </select>
+          </div>
+          <div class="ote-note" id="bonusBreakdown">—</div>
         </div>
       </div>
 
@@ -217,7 +237,7 @@
           </div>
         </div>
         <div class="row">
-          <label>Pay mix (base / variable)</label>
+          <label>Pay Mix (Base / Variable)</label>
           <select id="splitSelect" onchange="update()">
             <option value="80">80/20</option>
             <option value="75">75/25</option>
@@ -230,7 +250,7 @@
 
       <hr class="div">
       <div class="row" id="raiseTargetRow" style="display:none; margin-bottom:0;">
-        <label>Raise applies to</label>
+        <label>Raise Applies To</label>
         <select id="raiseTarget" onchange="update()">
           <option value="base">Base salary only</option>
           <option value="ote">Full OTE</option>
@@ -239,9 +259,9 @@
     </div>
 
     <div class="card">
-      <p class="sec-label">Package parameters</p>
+      <p class="sec-label">Package Parameters</p>
       <div class="row">
-        <label>Salary raise %</label>
+        <label>Salary Raise %</label>
         <div class="input-wrap">
           <input type="text" id="raiseInput" value="5" oninput="update()" placeholder="5" class="no-prefix has-suffix">
           <span class="suffix">%</span>
@@ -249,24 +269,24 @@
       </div>
 
       <hr class="div">
-      <p class="sec-label">Tiered relocation bonus — by COL gap from origin city</p>
+      <p class="sec-label">Tiered Relocation Bonus — By COL Gap From Origin City</p>
       <div class="tier-inputs">
         <div class="ti">
-          <label>Tier 1 — low COL gap (&lt;10% diff) · NY, Boston, LA</label>
+          <label>Tier 1 — Low COL gap (&lt;10% diff) · NY, Boston, LA</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
             <input type="text" id="t1" value="10,000" oninput="formatAndUpdate('t1')" placeholder="10,000">
           </div>
         </div>
         <div class="ti">
-          <label>Tier 2 — mid COL gap (10–25%) · Seattle, Austin, Denver</label>
+          <label>Tier 2 — Mid COL gap (10–25%) · Seattle, Austin, Denver</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
             <input type="text" id="t2" value="7,500" oninput="formatAndUpdate('t2')" placeholder="7,500">
           </div>
         </div>
         <div class="ti">
-          <label>Tier 3 — high COL gap (&gt;25%) · Chicago, Atlanta, Phoenix</label>
+          <label>Tier 3 — High COL gap (&gt;25%) · Chicago, Atlanta, Phoenix</label>
           <div class="input-wrap">
             <span class="prefix">$</span>
             <input type="text" id="t3" value="5,000" oninput="formatAndUpdate('t3')" placeholder="5,000">
@@ -280,7 +300,7 @@
     <div class="mgrid" id="summaryCards"></div>
 
     <div class="card">
-      <p class="sec-label">By origin city — net impact after COL adjustment</p>
+      <p class="sec-label">By Origin City — Net Impact After COL Adjustment</p>
       <p class="sec-desc">Each card shows whether the raise covers the higher cost of living in SF relative to where the employee is coming from. <strong>Raise vs COL</strong> is the annual raise amount minus the estimated extra yearly spend in SF — green means the raise covers it, red means there's still a gap. <strong>Yr-1 incl. bonus</strong> adds the one-time relocation bonus on top, showing the full first-year financial picture. The badge summarizes the overall strength of the package for that origin city.</p>
       <div class="city-grid" id="cityGrid"></div>
       <div id="verdict"></div>
@@ -324,11 +344,17 @@
 
     function setType(t) {
       empType = t;
-      document.getElementById('tab-base').classList.toggle('active', t === 'base');
-      document.getElementById('tab-ote').classList.toggle('active', t === 'ote');
-      document.getElementById('base-inputs').style.display = t === 'base' ? '' : 'none';
-      document.getElementById('ote-inputs').style.display = t === 'ote' ? '' : 'none';
+      ['base','ote'].forEach(type => {
+        document.getElementById('tab-' + type).classList.toggle('active', t === type);
+        document.getElementById(type + '-inputs').style.display = t === type ? '' : 'none';
+      });
       document.getElementById('raiseTargetRow').style.display = t === 'ote' ? '' : 'none';
+      update();
+    }
+
+    function toggleBonus() {
+      const on = document.getElementById('bonusToggle').checked;
+      document.getElementById('bonus-fields').style.display = on ? '' : 'none';
       update();
     }
 
@@ -341,36 +367,56 @@
       const t3b = parseVal('t3');
       const tierBonus = [0, t1b, t2b, t3b];
 
-      let baseSalary, variablePay, currentTotal;
+      let baseSalary, bonusTarget, currentTotal;
 
       if (empType === 'base') {
         baseSalary = parseVal('salaryInput');
-        variablePay = 0;
-        currentTotal = baseSalary;
+        const bonusOn = document.getElementById('bonusToggle').checked;
+        if (bonusOn) {
+          const bonusPct = parseInt(document.getElementById('bonusLevelSelect').value);
+          bonusTarget = Math.round(baseSalary * bonusPct / 100);
+          currentTotal = baseSalary + bonusTarget;
+          document.getElementById('bonusBreakdown').textContent =
+            'Base: ' + fmt(baseSalary) + '  |  Bonus Target (' + bonusPct + '%): ' + fmt(bonusTarget) + '  |  Total Target Comp: ' + fmt(currentTotal);
+        } else {
+          bonusTarget = 0;
+          currentTotal = baseSalary;
+        }
       } else {
         const ote = parseVal('oteInput');
         const splitPct = parseInt(document.getElementById('splitSelect').value);
         baseSalary = Math.round(ote * splitPct / 100);
-        variablePay = ote - baseSalary;
+        const variablePay = ote - baseSalary;
+        bonusTarget = 0;
         currentTotal = ote;
         document.getElementById('oteBreakdown').textContent =
-          'Base: ' + fmt(baseSalary) + '  |  Variable (target): ' + fmt(variablePay) + '  |  OTE: ' + fmt(ote);
+          'Base: ' + fmt(baseSalary) + '  |  Variable (Target): ' + fmt(variablePay) + '  |  OTE: ' + fmt(ote);
       }
 
       const raiseTarget = document.getElementById('raiseTarget').value;
       let raiseAmount;
-      if (empType === 'base' || raiseTarget === 'base') {
-        raiseAmount = baseSalary * (raise / 100);
-      } else {
+      if (empType === 'ote' && raiseTarget === 'ote') {
         raiseAmount = currentTotal * (raise / 100);
+      } else {
+        raiseAmount = baseSalary * (raise / 100);
       }
 
-      const newTotal = currentTotal + raiseAmount;
+      const newBase = baseSalary + raiseAmount;
+      const bonusOn = empType === 'base' && document.getElementById('bonusToggle').checked;
+      const newBonusTarget = bonusOn
+        ? Math.round(newBase * parseInt(document.getElementById('bonusLevelSelect').value) / 100)
+        : 0;
+      const newTotal = bonusOn ? newBase + newBonusTarget : currentTotal + raiseAmount;
+
+      const summaryLabel = empType === 'ote' ? 'New OTE' : bonusOn ? 'New Total Target Comp' : 'New Salary';
+      const thirdCard = bonusOn
+        ? `<div class="mcard"><div class="ml">New Bonus Target</div><div class="mv pos">${fmt(newBonusTarget)}/yr</div></div>`
+        : `<div class="mcard"><div class="ml">Yr-1 Value (Avg Relo Bonus)</div><div class="mv pos">+${fmt(raiseAmount + (t1b + t2b + t3b) / 3)}</div></div>`;
 
       document.getElementById('summaryCards').innerHTML = `
-        <div class="mcard"><div class="ml">New ${empType === 'ote' ? 'OTE' : 'salary'}</div><div class="mv">${fmt(newTotal)}</div></div>
-        <div class="mcard"><div class="ml">Annual raise value</div><div class="mv pos">+${fmt(raiseAmount)}/yr</div></div>
-        <div class="mcard"><div class="ml">Yr-1 value (avg bonus)</div><div class="mv pos">+${fmt(raiseAmount + (t1b + t2b + t3b) / 3)}</div></div>
+        <div class="mcard"><div class="ml">${summaryLabel}</div><div class="mv">${fmt(newTotal)}</div></div>
+        <div class="mcard"><div class="ml">Annual Raise Value</div><div class="mv pos">+${fmt(raiseAmount)}/yr</div></div>
+        ${thirdCard}
       `;
 
       const tierRanges = ['', 'NY · Boston · LA', 'Seattle · Austin · Miami · Denver', 'Chicago · Atlanta · Phoenix'];
@@ -389,14 +435,18 @@
         const net = raiseAmount - colExtra;
         const year1net = net + bonus;
         if (net >= 0) covered++;
-        let pillClass = 'pa', pillText = 'partial COL cover';
-        if (net >= 0) { pillClass = 'pg'; pillText = 'raise covers gap'; }
-        if (net < -raiseAmount * 0.5) { pillClass = 'pr'; pillText = 'raise falls short'; }
+        let pillClass = 'pa', pillText = 'Partial COL Cover';
+        if (net >= 0) { pillClass = 'pg'; pillText = 'Raise Covers Gap'; }
+        if (net < -raiseAmount * 0.5) { pillClass = 'pr'; pillText = 'Raise Falls Short'; }
+        const bonusLine = bonusOn
+          ? `<div class="cd pos" style="margin-bottom:2px;">Bonus Target Impact: +${fmt(Math.round(newBonusTarget - bonusTarget))}/yr</div>`
+          : '';
         return `<div class="ccity">
           <div class="cn">${c.name}</div>
-          <div class="cs">SF costs ~${c.col}% more · Bonus: ${fmt(bonus)}</div>
+          <div class="cs">SF costs ~${c.col}% more · Relo Bonus: ${fmt(bonus)}</div>
           <div class="cd ${net >= 0 ? 'pos' : 'neg'}">Raise vs COL: ${net >= 0 ? '+' : ''}${fmt(net)}/yr</div>
-          <div class="cd pos" style="margin-bottom:4px;">Yr-1 incl. bonus: +${fmt(Math.max(year1net, 0))}</div>
+          ${bonusLine}
+          <div class="cd pos" style="margin-bottom:4px;">Yr-1 Incl. Relo Bonus: +${fmt(Math.max(year1net, 0))}</div>
           <span class="pill ${pillClass}">${pillText}</span>
         </div>`;
       }).join('');
